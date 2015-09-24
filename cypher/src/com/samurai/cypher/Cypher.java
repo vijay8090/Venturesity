@@ -2,6 +2,8 @@ package com.samurai.cypher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /*
  * 
@@ -63,32 +65,28 @@ Plaintext: The enemy will attack at dawn!
  */
 public class Cypher {
 
-	List<String> alphabets = new ArrayList<String>();
-
-	String input = "The enemy will attack at dawn";
-	String key = "venturesity";
+	private List<String> alphabets = new ArrayList<String>();
+	private String key = "venturesity";
+	boolean debug = false;
 
 	public Cypher() {
+
 		loadAlphabets();
-
-		String cypherText = encrypt(input);
-
-		System.out.println("cypherText : " + cypherText);
-		
-		//String input = decrypt(cypherText);
-		
-		String input = decrypt("Qntzjxssgdblglovuqucyatt"); //Qntzjxssgdligiowvqudyatt
-
-		System.out.println("input Text : " + input);
 
 	}
 
+	/**
+	 * 
+	 * This Method is to 
+	 * @param input
+	 * @return
+	 */
 	public String encrypt(String input) {
 		String cypherText = "";
 
 		input = input.toLowerCase().trim().replaceAll(" ", "");
-		System.out.println(input);
-
+		if (debug)
+			System.out.println(input);
 
 		int size = input.length();
 
@@ -100,10 +98,10 @@ public class Cypher {
 
 		int[] modArray = new int[size];
 
-		System.out.println("input lengtgh:" + size);
-		System.out.println("key length:" + key.length());
-
-		
+		if (debug)
+			System.out.println("input lengtgh:" + size);
+		if (debug)
+			System.out.println("key length:" + key.length());
 
 		for (int i = 0; i < size; i++) {
 
@@ -111,11 +109,11 @@ public class Cypher {
 
 			messageArray[i] = getPosition("" + ch);
 		}
-		
+
 		String keyStr = getKeyArr(size);
 
-		System.out.println("\n new key : " + keyStr);
-
+		if (debug)
+			System.out.println("\n new key : " + keyStr);
 
 		for (int i = 0; i < size; i++) {
 
@@ -124,75 +122,50 @@ public class Cypher {
 			keyArray[i] = getPosition("" + ch);
 		}
 
-
 		for (int i = 0; i < size; i++) {
 
 			messageKeyArray[i] = keyArray[i] + messageArray[i];
 		}
-
 
 		for (int i = 0; i < size; i++) {
 
 			modArray[i] = (messageKeyArray[i] % 26) + 1;
 		}
 
-		print(messageArray);
-		print(keyArray);
-		print(messageKeyArray);
-		print(modArray);
-
+		if (debug) {
+			print(messageArray);
+			print(keyArray);
+			print(messageKeyArray);
+			print(modArray);
+		}
 
 		for (int ch : modArray) {
-			System.out.print(alphabets.get(ch - 1) + " \t");
+			if (debug)
+				System.out.print(alphabets.get(ch - 1) + " \t");
 			cypherText += alphabets.get(ch - 1);
 		}
 		cypherText = capitalize(cypherText);
-		System.out.println();
-		System.out.println(cypherText);
+		if (debug)
+			System.out.println();
+		if (debug)
+			System.out.println(cypherText);
 
 		return cypherText;
 	}
 
-	/**
-	 * This Method is to 
-	 * @param size
-	 * @return
-	 */
-	private String getKeyArr(int size) {
-		int klen = key.length();
-
-		int qou = size / klen;
-		int rem = size % klen;
-
-		String keyStr = "";
-
-		for (int i = 0; i < qou; i++) {
-			keyStr += key;
-		}
-
-		for (int i = 0; i < rem; i++) {
-			keyStr += key.toCharArray()[i];
-		}
-		return keyStr;
-	}
-	
-	
 	public String decrypt(String cypherText) {
 		String input = "";
 		cypherText = cypherText.toLowerCase();
 		int size = cypherText.length();
-		
-		int[] messageArray = new int[size];
 
 		int[] keyArray = new int[size];
 
 		int[] messageKeyArray = new int[size];
 
 		int[] modArray = new int[size];
-		
+
 		int[] cyperArray = new int[size];
-		
-		
+
 		for (int i = 0; i < size; i++) {
 
 			char ch = cypherText.toCharArray()[i];
@@ -200,11 +173,11 @@ public class Cypher {
 			cyperArray[i] = getPosition("" + ch);
 
 		}
-		
+
 		String keyStr = getKeyArr(size);
 
-		System.out.println("\n new key : " + keyStr);
-
+		if (debug)
+			System.out.println("\n new key : " + keyStr);
 
 		for (int i = 0; i < size; i++) {
 
@@ -212,56 +185,73 @@ public class Cypher {
 
 			keyArray[i] = getPosition("" + ch);
 		}
-		
-		
+
 		for (int i = 0; i < size; i++) {
 
 			messageKeyArray[i] = cyperArray[i] - keyArray[i];
 		}
-		
-		for (int i = 0; i < size; i++) {
-			
-			if(messageKeyArray[i] == 0 || messageKeyArray[i] == 1){
-				modArray[i] =25;
-			}else {
 
-			modArray[i] = (messageKeyArray[i]<0?26+messageKeyArray[i]:messageKeyArray[i] % 26) -  1;
+		for (int i = 0; i < size; i++) {
+
+			if (messageKeyArray[i] == 0 || messageKeyArray[i] == 1) {
+				modArray[i] = 25;
+			} else {
+
+				modArray[i] = (messageKeyArray[i] < 0 ? 26 + messageKeyArray[i] : messageKeyArray[i] % 26) - 1;
 			}
 		}
-		
-		print(cyperArray);
-		print(keyArray);
-		print(messageKeyArray);
-		print(modArray);
-		
+
+		if (debug) {
+			print(cyperArray);
+			print(keyArray);
+			print(messageKeyArray);
+			print(modArray);
+		}
+
 		for (int ch : modArray) {
-			System.out.print(alphabets.get(ch - 1) + " \t");
+			if (debug)
+				System.out.print(alphabets.get(ch - 1) + " \t");
 			input += alphabets.get(ch - 1);
 		}
 		input = capitalize(input);
-		System.out.println();
-		System.out.println(input);
-		
+		if (debug)
+			System.out.println();
+		if (debug)
+			System.out.println(input);
+
 		return input;
-		
+
 	}
-	
-	
-	private void print(int[] arr){
-		
+
+	/**
+	 * 
+	 * This Method is to 
+	 * @param arr
+	 */
+	private void print(int[] arr) {
 
 		for (int ch : arr) {
 			System.out.print(ch + " \t");
 		}
 
 		System.out.println();
-		
+
 	}
 
+	/**
+	 * 
+	 * This Method is to 
+	 * @param line
+	 * @return
+	 */
 	private String capitalize(final String line) {
 		return Character.toUpperCase(line.charAt(0)) + line.substring(1);
 	}
 
+	/**
+	 * 
+	 * This Method is to
+	 */
 	private void loadAlphabets() {
 
 		for (char a = 'a'; a <= 'z'; a++) {
@@ -272,16 +262,138 @@ public class Cypher {
 		// System.out.println(alphabets);
 	}
 
+	/**
+	 * 
+	 * This Method is to 
+	 * @param ch
+	 * @return
+	 */
 	private int getPosition(String ch) {
 
 		return alphabets.indexOf(ch) + 1;
 	}
 
+	/**
+	 * This Method is to
+	 * 
+	 * @param size
+	 * @return
+	 */
+	private String getKeyArr(int size) {
+		int keylength = key.length();
+
+		int qoutient = size / keylength;
+		int remainder = size % keylength;
+
+		String keyStr = "";
+
+		for (int i = 0; i < qoutient; i++) {
+			keyStr += key;
+		}
+
+		for (int i = 0; i < remainder; i++) {
+			keyStr += key.toCharArray()[i];
+		}
+		return keyStr;
+	}
+
+	/**
+	 * 
+	 * This Method is to 
+	 * @param myString
+	 * @return
+	 */
+	public static boolean checkValidInput(String myString) {
+		
+		myString = myString.trim().replaceAll(" ", "");
+		
+		if(myString.substring(myString.length()-1).equals("!")){
+			myString =myString.substring(0,myString.length()-1);
+		}
+		
+		if (Pattern.matches("[a-zA-Z]+", myString)) {
+			// System.out.println("string has only alphabets");
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 
+	 * This Method is to 
+	 * @param displayMsg
+	 * @param sc
+	 * @return
+	 */
+	public static boolean getOption(String displayMsg, Scanner sc) {
+
+		System.out.print(displayMsg);
+		String type = sc.nextLine();
+		if (type.toLowerCase().equals("y") || type.toLowerCase().equals("n")) {
+			return type.toLowerCase().equals("y") ? true : false;
+		} else {
+			System.out.println("Please enter (Y/N)");
+
+			return getOption(displayMsg, sc);
+		}
+
+	}
+
+	/**
+	 * 
+	 * This Method is to 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
-		new Cypher();
+		Cypher cyp = new Cypher();
+		boolean process = true;
 
-		System.out.println(((26-5)%26)-1);
+		while (process) {
+
+			System.out.println("================================");
+			System.out.println("Please enter the details :");
+			Scanner sc = new Scanner(System.in);
+			System.out.print("Key:");
+			String key = sc.nextLine();
+			cyp.key = key;
+			if (!checkValidInput(key)) {
+				System.out.println("INPUT ERROR :: key should contains only alphabets !");
+				continue;
+			}
+
+			boolean plainText = getOption("Is message plaintext (Y/N)", sc);
+
+			String message = "";
+			if (plainText) {
+				System.out.print("Plaintext:");
+				message = sc.nextLine();
+				if (checkValidInput(message)) {
+					System.out.print("Ciphertext:" + cyp.encrypt(message));
+				} else {
+					System.out.println("INPUT ERROR :: input should contains only alphabets !");
+					continue;
+				}
+
+			} else {
+				System.out.print("Ciphertext:");
+				message = sc.nextLine();
+				if (checkValidInput(message)) {
+					System.out.print("Plaintext:" + cyp.decrypt(message));
+				} else {
+					System.out.println("INPUT ERROR :: input should contains only alphabets !");
+					continue;
+				}
+			}
+			System.out.println();
+			System.out.println("==============================================");
+			process = getOption("Do you wanna Continue (Y/N)", sc);
+			if (!process) {
+				System.out.println("Thankyou, Closing !");
+			}
+		}
+
 	}
 
 }

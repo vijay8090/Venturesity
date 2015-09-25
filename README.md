@@ -1,6 +1,6 @@
 # Venturesity
-PROBLEM STATEMENTS
-Codes and Cyphers
+# PROBLEM STATEMENTS
+# Codes and Cyphers
 Codes and cyphers have been used to protect secrets since ancient times. In 1882, Frank Miller described the use of a one-time pad: an encryption technique that cannot be cracked if used correctly. The technique involves the use of a key and plaintext that is to be coded. Each character of the plaintext and the key are paired up using modular addition.
 
 Example:

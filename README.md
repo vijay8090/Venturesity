@@ -12,14 +12,14 @@ The enemy will attack at dawn!
 Venturesityventuresityve!
 
 The coding will be done as follows:
-
-T h e e n e m y w i l l a t t a c k a t d a w n! Message
+ ```sh
+T h e e n e m y w i l l a t t a c k a t d a w n! Message 
 20 8 5 5 14 5 13 25 23 9 12 12 1 20 20 1 3 11 1 20 4 1 23 14! Message
 +22 5 14 20 21 18 5 19 9 20 25 22 5 14 20 21 18 5 19 9 20 25 22 5! Key
 =42 13 19 25 35 23 18 44 32 29 37 34 6 34 40 22 21 16 20 29 24 26 45 19! Message + Key
 = 17 14 20 26 10 24 19 19 7 4 12 9 7 9 15 23 22 17 21 4 25 1 20 20! Message + Key (mod 26) + 1
 = Qntzjxssgdligiowvqudyatt!
-
+...
 So Alice would send Qntzjxssgdligiowvqudyatt! to Bob. If Bob knows the key, he would decode it as follows:
 
 Q n t z j x s s g d l i g i o w v q u d y a t t! ciphertext
